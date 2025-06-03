@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("OOPSIEWASM")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1f21d7c219aef0ddef9fc59553cc481bd2035245")]
 [assembly: System.Reflection.AssemblyProductAttribute("OOPSIEWASM")]
 [assembly: System.Reflection.AssemblyTitleAttribute("OOPSIEWASM")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

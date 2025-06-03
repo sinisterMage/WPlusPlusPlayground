@@ -379,6 +379,33 @@ namespace WPlusPlus
 
                             return new AltersNode(child, parent, methodList);
                         }
+                        case "externcall":
+{
+    Advance(); // consume 'externcall'
+    Expect("(");
+
+    var domain = ParseExpression();  // should be string
+    Expect(",");
+    var method = ParseExpression();  // should be string
+
+    var args = new List<Node>();
+    while (!(Match(TokenType.Symbol) && Peek().Value == ")"))
+    {
+        Expect(","); // comma before each argument
+        args.Add(ParseExpression());
+    }
+
+    Expect(")");
+    Expect(";");
+
+    return new CallNode(
+        new IdentifierNode("externcall"),
+        new List<Node> { domain, method }.Concat(args).ToList()
+    );
+}
+
+
+
 
 
 

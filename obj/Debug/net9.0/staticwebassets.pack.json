@@ -201,6 +201,10 @@
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map"
     },
     {
+      "Id": "c:\\Users\\ofekb\\source\\repos\\OOPSIEWASM\\wwwroot\\oopsie.js",
+      "PackagePath": "staticwebassets\\oopsie.js"
+    },
+    {
       "Id": "c:\\Users\\ofekb\\source\\repos\\OOPSIEWASM\\wwwroot\\sample-data\\weather.json",
       "PackagePath": "staticwebassets\\sample-data\\weather.json"
     },

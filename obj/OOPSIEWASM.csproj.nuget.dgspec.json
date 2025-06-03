@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ofekb\\source\\repos\\OOPSIEWASM\\OOPSIEWASM.csproj": {}
+    "c:\\Users\\ofekb\\source\\repos\\OOPSIEWASM\\OOPSIEWASM.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ofekb\\source\\repos\\OOPSIEWASM\\OOPSIEWASM.csproj": {
+    "c:\\Users\\ofekb\\source\\repos\\OOPSIEWASM\\OOPSIEWASM.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ofekb\\source\\repos\\OOPSIEWASM\\OOPSIEWASM.csproj",
+        "projectUniqueName": "c:\\Users\\ofekb\\source\\repos\\OOPSIEWASM\\OOPSIEWASM.csproj",
         "projectName": "OOPSIEWASM",
-        "projectPath": "C:\\Users\\ofekb\\source\\repos\\OOPSIEWASM\\OOPSIEWASM.csproj",
+        "projectPath": "c:\\Users\\ofekb\\source\\repos\\OOPSIEWASM\\OOPSIEWASM.csproj",
         "packagesPath": "C:\\Users\\ofekb\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ofekb\\source\\repos\\OOPSIEWASM\\obj\\",
+        "outputPath": "c:\\Users\\ofekb\\source\\repos\\OOPSIEWASM\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

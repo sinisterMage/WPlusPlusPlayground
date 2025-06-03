@@ -1,1 +1,3 @@
+C:\Users\ofekb\source\repos\OOPSIEWASM\dist\gh-pages\sample-data\weather.json
+C:\Users\ofekb\source\repos\OOPSIEWASM\dist\gh-pages\_framework\blazor.boot.json
 C:\Users\ofekb\source\repos\OOPSIEWASM\dist\web.config

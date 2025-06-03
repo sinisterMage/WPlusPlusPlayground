@@ -16,6 +16,17 @@ public delegate Task<object> AsyncFunctionObject(List<object> args);
         private Dictionary<string, EntityDefinition> entityTable = new();
         private Dictionary<string, object> currentInstance = null;
         private Dictionary<string, Dictionary<string, MethodNode>> originalMethodTable = new();
+        private readonly Dictionary<string, Func<string, object[], Task>> externCalls = new();
+        private readonly Dictionary<string, Func<string, object[], Task<object>>> externCallHandlers
+    = new Dictionary<string, Func<string, object[], Task<object>>>();
+
+
+public void RegisterExternCall(string domain, Func<string, object[], Task<object>> handler)
+        {
+            externCallHandlers[domain] = handler;
+        }
+
+
 
 private string currentEntity = null;
 
@@ -138,61 +149,85 @@ private string currentEntity = null;
                     throw new Exception("Expected a task in await expression.");
 
 
-                case CallNode call:
+               case CallNode call:
+{
+    // ✅ Handle externcall BEFORE resolving the callee normally
+    if (call.Callee is IdentifierNode externIdent && externIdent.Name == "externcall")
+{
+    var domain = (await Evaluate(call.Arguments[0]))?.ToString().Trim('"');
+var method = (await Evaluate(call.Arguments[1]))?.ToString().Trim('"');
+
+
+    var externArgs = new List<object>();
+    for (int i = 2; i < call.Arguments.Count; i++)
+        externArgs.Add(await Evaluate(call.Arguments[i]));
+
+    if (externCallHandlers.TryGetValue(domain, out var handler))
+    {
+        return await handler(method, externArgs.ToArray());
+    }
+    else
+    {
+        throw new Exception($"No externcall handler registered for domain '{domain}'");
+    }
+}
+
+
+    // 🔽 Your existing logic continues here
+    var callee = await Evaluate(call.Callee);
+
+    var args = new List<object>();
+    foreach (var arg in call.Arguments)
+        args.Add(await Evaluate(arg));
+
+    switch (callee)
+    {
+        case FunctionObject f:
+            return await f(args);
+
+        case AsyncFunctionObject af:
+            return af(args); // ✅ do not await
+
+        case MethodNode method:
+            {
+                var methodScope = new Interpreter(this.variables)
+                {
+                    entityTable = this.entityTable,
+                    originalMethodTable = this.originalMethodTable,
+                };
+
+                if (call.Callee is MemberAccessNode memberAccess)
+                {
+                    var target = await Evaluate(memberAccess.Target);
+                    if (target is Dictionary<string, object> instance)
                     {
-                        var callee = await Evaluate(call.Callee);
+                        methodScope.currentInstance = instance;
 
-                        var args = new List<object>();
-                        foreach (var arg in call.Arguments)
-                            args.Add(await Evaluate(arg));
-
-                        switch (callee)
+                        if (instance.TryGetValue("__entity__", out var entName) && entName is string entStr)
                         {
-                            case FunctionObject f:
-                                return await f(args);
-
-                            case AsyncFunctionObject af:
-                                return af(args); // ✅ return Task<object>, do not await
-
-                            case MethodNode method:
-                                {
-                                    var methodScope = new Interpreter(this.variables)
-                                    {
-                                        entityTable = this.entityTable,
-                                        originalMethodTable = this.originalMethodTable, // ✅ ADD THIS
-                                    };
-
-                                    if (call.Callee is MemberAccessNode memberAccess)
-                                    {
-                                        var target = await Evaluate(memberAccess.Target);
-                                        if (target is Dictionary<string, object> instance)
-                                        {
-                                            methodScope.currentInstance = instance;
-
-                                            if (instance.TryGetValue("__entity__", out var entName) && entName is string entStr)
-                                            {
-                                                Console.WriteLine("[DEBUG] Setting currentEntity from instance: " + entStr);
-                                                methodScope.currentEntity = entStr;
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        methodScope.currentInstance = this.currentInstance;
-                                        methodScope.currentEntity = this.currentEntity;
-                                    }
-
-                                    for (int i = 0; i < method.Parameters.Count; i++)
-                                        methodScope.variables[method.Parameters[i]] = (args[i], false);
-
-                                    Console.WriteLine($"[CALL] Executing method '{method.Name}' from entity '{methodScope.currentEntity}'");
-                                    return await methodScope.Evaluate(method.Body);
-                                }
-
-                            default:
-                                throw new Exception("Trying to call a non-function value.");
+                            Console.WriteLine("[DEBUG] Setting currentEntity from instance: " + entStr);
+                            methodScope.currentEntity = entStr;
                         }
                     }
+                }
+                else
+                {
+                    methodScope.currentInstance = this.currentInstance;
+                    methodScope.currentEntity = this.currentEntity;
+                }
+
+                for (int i = 0; i < method.Parameters.Count; i++)
+                    methodScope.variables[method.Parameters[i]] = (args[i], false);
+
+                Console.WriteLine($"[CALL] Executing method '{method.Name}' from entity '{methodScope.currentEntity}'");
+                return await methodScope.Evaluate(method.Body);
+            }
+
+        default:
+            throw new Exception("Trying to call a non-function value.");
+    }
+}
+
 
 
 
@@ -549,6 +584,26 @@ private string currentEntity = null;
 
                         throw new Exception("Cannot access member of non-object");
                     }
+                    case ExternCallNode externCall:
+{
+    if (externCalls.TryGetValue(externCall.TypeName, out var handler))
+    {
+        var args = new List<object>();
+        foreach (var argExpr in externCall.Args)
+        {
+            var value = await Evaluate(argExpr);
+            args.Add(value);
+        }
+
+        await handler(externCall.MethodName, args.ToArray());
+        return null;
+    }
+    else
+    {
+        throw new Exception($"❌ Unknown externcall type: \"{externCall.TypeName}\"");
+    }
+}
+
 
 
 

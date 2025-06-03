@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "NUsmfM2mvJQ=",
+  "dgSpecHash": "VeYdFt3pxsU=",
   "success": true,
-  "projectFilePath": "C:\\Users\\ofekb\\source\\repos\\OOPSIEWASM\\OOPSIEWASM.csproj",
+  "projectFilePath": "c:\\Users\\ofekb\\source\\repos\\OOPSIEWASM\\OOPSIEWASM.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ofekb\\.nuget\\packages\\microsoft.aspnetcore.authorization\\9.0.4\\microsoft.aspnetcore.authorization.9.0.4.nupkg.sha512",
     "C:\\Users\\ofekb\\.nuget\\packages\\microsoft.aspnetcore.components\\9.0.4\\microsoft.aspnetcore.components.9.0.4.nupkg.sha512",

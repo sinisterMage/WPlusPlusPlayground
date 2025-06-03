@@ -1,21 +1,24 @@
 @page "/run"
 @using WppEngine
+@inject CanvasInterop CanvasInterop
 
 <h3>Run W++ Code</h3>
 
-<textarea @bind="userCode" rows="10" cols="60"></textarea>
+<textarea @bind="userCode" rows="10" cols="60" style="width:100%; font-family:monospace;"></textarea>
 <br />
-<button @onclick="ExecuteCode">Run</button>
+<button class="btn btn-primary mt-2" @onclick="ExecuteCode">Run</button>
 
-<h4>Output</h4>
+<h4 class="mt-4">Output</h4>
 <pre>@output</pre>
 
+<canvas id="canvas" width="500" height="300" style="border:1px solid #ccc; margin-top: 1rem;"></canvas>
+
 @code {
-    private string userCode = "print \"Hello from W++\";";
-    private string output;
+    private string userCode = "externcall(\"canvas\", \"drawText\", \"Hello from W++\", 10, 50);";
+    private string output = string.Empty;
 
     private async Task ExecuteCode()
     {
-        output = await WppRunner.RunWpp(userCode);
+        output = await WppRunner.RunWpp(userCode, CanvasInterop);
     }
 }
